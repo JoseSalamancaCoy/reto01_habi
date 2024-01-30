@@ -1,0 +1,160 @@
+# this is an auto generated file. This will be overwritten
+
+mutation CreateUsers(
+  $input: CreateUsersInput!
+  $condition: ModelUsersConditionInput
+) {
+  createUsers(input: $input, condition: $condition) {
+    id
+    name
+    email
+    TaskCreated {
+      nextToken
+      __typename
+    }
+    TaskAssigned {
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+
+mutation UpdateUsers(
+  $input: UpdateUsersInput!
+  $condition: ModelUsersConditionInput
+) {
+  updateUsers(input: $input, condition: $condition) {
+    id
+    name
+    email
+    TaskCreated {
+      nextToken
+      __typename
+    }
+    TaskAssigned {
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+
+mutation DeleteUsers(
+  $input: DeleteUsersInput!
+  $condition: ModelUsersConditionInput
+) {
+  deleteUsers(input: $input, condition: $condition) {
+    id
+    name
+    email
+    TaskCreated {
+      nextToken
+      __typename
+    }
+    TaskAssigned {
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+
+mutation CreateTasks(
+  $input: CreateTasksInput!
+  $condition: ModelTasksConditionInput
+) {
+  createTasks(input: $input, condition: $condition) {
+    id
+    title
+    created {
+      id
+      name
+      email
+      createdAt
+      updatedAt
+      __typename
+    }
+    assigned {
+      id
+      name
+      email
+      createdAt
+      updatedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    usersTaskCreatedId
+    usersTaskAssignedId
+    __typename
+  }
+}
+
+mutation UpdateTasks(
+  $input: UpdateTasksInput!
+  $condition: ModelTasksConditionInput
+) {
+  updateTasks(input: $input, condition: $condition) {
+    id
+    title
+    created {
+      id
+      name
+      email
+      createdAt
+      updatedAt
+      __typename
+    }
+    assigned {
+      id
+      name
+      email
+      createdAt
+      updatedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    usersTaskCreatedId
+    usersTaskAssignedId
+    __typename
+  }
+}
+
+mutation DeleteTasks(
+  $input: DeleteTasksInput!
+  $condition: ModelTasksConditionInput
+) {
+  deleteTasks(input: $input, condition: $condition) {
+    id
+    title
+    created {
+      id
+      name
+      email
+      createdAt
+      updatedAt
+      __typename
+    }
+    assigned {
+      id
+      name
+      email
+      createdAt
+      updatedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    usersTaskCreatedId
+    usersTaskAssignedId
+    __typename
+  }
+}

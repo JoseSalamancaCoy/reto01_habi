@@ -1,15 +1,20 @@
 {
   "dev": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-habitask-dev-103255-authRole",
-      "UnauthRoleArn": "arn:aws:iam::913045965320:role/amplify-habitask-dev-103255-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::913045965320:role/amplify-habitask-dev-103255-authRole",
+      "AuthRoleName": "amplify-habitask-dev-162448-authRole",
+      "UnauthRoleArn": "arn:aws:iam::913045965320:role/amplify-habitask-dev-162448-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::913045965320:role/amplify-habitask-dev-162448-authRole",
       "Region": "us-east-2",
-      "DeploymentBucketName": "amplify-habitask-dev-103255-deployment",
-      "UnauthRoleName": "amplify-habitask-dev-103255-unauthRole",
-      "StackName": "amplify-habitask-dev-103255",
-      "StackId": "arn:aws:cloudformation:us-east-2:913045965320:stack/amplify-habitask-dev-103255/d875c850-bf84-11ee-aa07-065e8c017dcd",
-      "AmplifyAppId": "d2chtjm3fnknqm"
+      "DeploymentBucketName": "amplify-habitask-dev-162448-deployment",
+      "UnauthRoleName": "amplify-habitask-dev-162448-unauthRole",
+      "StackName": "amplify-habitask-dev-162448",
+      "StackId": "arn:aws:cloudformation:us-east-2:913045965320:stack/amplify-habitask-dev-162448/004a81a0-bfb6-11ee-8a9a-02ff9aa3109f",
+      "AmplifyAppId": "d2sxdocleslwtu"
+    },
+    "categories": {
+      "api": {
+        "habitask": {}
+      }
     }
   }
 }

@@ -1,0 +1,142 @@
+# this is an auto generated file. This will be overwritten
+
+subscription OnCreateUsers($filter: ModelSubscriptionUsersFilterInput) {
+  onCreateUsers(filter: $filter) {
+    id
+    name
+    email
+    TaskCreated {
+      nextToken
+      __typename
+    }
+    TaskAssigned {
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+
+subscription OnUpdateUsers($filter: ModelSubscriptionUsersFilterInput) {
+  onUpdateUsers(filter: $filter) {
+    id
+    name
+    email
+    TaskCreated {
+      nextToken
+      __typename
+    }
+    TaskAssigned {
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+
+subscription OnDeleteUsers($filter: ModelSubscriptionUsersFilterInput) {
+  onDeleteUsers(filter: $filter) {
+    id
+    name
+    email
+    TaskCreated {
+      nextToken
+      __typename
+    }
+    TaskAssigned {
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+
+subscription OnCreateTasks($filter: ModelSubscriptionTasksFilterInput) {
+  onCreateTasks(filter: $filter) {
+    id
+    title
+    created {
+      id
+      name
+      email
+      createdAt
+      updatedAt
+      __typename
+    }
+    assigned {
+      id
+      name
+      email
+      createdAt
+      updatedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    usersTaskCreatedId
+    usersTaskAssignedId
+    __typename
+  }
+}
+
+subscription OnUpdateTasks($filter: ModelSubscriptionTasksFilterInput) {
+  onUpdateTasks(filter: $filter) {
+    id
+    title
+    created {
+      id
+      name
+      email
+      createdAt
+      updatedAt
+      __typename
+    }
+    assigned {
+      id
+      name
+      email
+      createdAt
+      updatedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    usersTaskCreatedId
+    usersTaskAssignedId
+    __typename
+  }
+}
+
+subscription OnDeleteTasks($filter: ModelSubscriptionTasksFilterInput) {
+  onDeleteTasks(filter: $filter) {
+    id
+    title
+    created {
+      id
+      name
+      email
+      createdAt
+      updatedAt
+      __typename
+    }
+    assigned {
+      id
+      name
+      email
+      createdAt
+      updatedAt
+      __typename
+    }
+    createdAt
+    updatedAt
+    usersTaskCreatedId
+    usersTaskAssignedId
+    __typename
+  }
+}

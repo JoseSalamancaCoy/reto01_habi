@@ -1,0 +1,5 @@
+{
+  "AppSyncApiName": "habitask",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "DynamoDBEnableServerSideEncryption": false
+}
