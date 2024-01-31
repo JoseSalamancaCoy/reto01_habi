@@ -17,6 +17,12 @@
       },
       "auth": {
         "habitaskc5346d0b": {}
+      },
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "d2sxdocleslwtu",
+          "type": "manual"
+        }
       }
     }
   }
