@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
 //import {Task} from './../models/task.models'
-import { Observable,of } from 'rxjs'; 
 import { type Client, generateClient } from 'aws-amplify/api';
 import * as mutations from './../../graphql/mutations';
 import * as query from './../../graphql/queries';
@@ -22,7 +21,7 @@ export class TaskService {
     try {
       const response = await this.client.graphql({
         query: query.listTasks,
-        variables: { filter: {usersTaskCreatedId: {contains: userId} }} // Pasando el userId como variable
+        variables: { filter: {usersTaskAssignedId: {contains: userId} }} // Pasando el userId como variable
       });
       if (response.data && response.data.listTasks && response.data.listTasks.items) {
         console.log('Tareas obtenidas:', response.data.listTasks.items);
@@ -62,14 +61,45 @@ export class TaskService {
       throw e; // O maneja el error como sea más apropiado para tu aplicación
     } 
   }
-  updateTask(task:Tasks){
+  public async  updateTask(task:Tasks){
+    //Consulta para eliminar tarea de base de datos
     
+    // Preparar la tarea actualizada
+    const updatedTask = {
+      ...task,
+      completed: !task.completed,
+      dateFinished: Math.floor(Date.now() / 1000)
+    };
+    try{
+      const response = await this.client.graphql({
+        query: mutations.updateTasks,
+        variables: {
+          input: {id:task.id, completed:task.completed, dateFinished:task.dateFinished }
+        }
+      });
+      return updatedTask;
+    } catch(e){
+      console.error(e);
+      throw e;
+    }
     //Conuslta para actualizar valor de la tarea
   }
-  deleteTask(id: String): Observable<any>{
+  
+  public async  deleteTask(taskId: string) {
     //Consulta para eliminar tarea de base de datos
-    return of({ success: true });
+    try{
+      const response = await this.client.graphql({
+        query: mutations.deleteTasks,
+        variables: {
+          input: {id:taskId}
+        }
+      });
+    } catch(e){
+      console.error(e);
+      throw e;
+    }
   }
+
   private generateUUID(): string {
     // Genera un número hexadecimal aleatorio de cierta longitud
     const s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);

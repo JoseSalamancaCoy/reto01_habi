@@ -84,39 +84,40 @@ export class HomeComponent {
     })    
   }
 
-  updateTask(index:Number){
-    this.tasks.update((tasks) =>{
-      return tasks.map((task,position) =>{
-        if(position === index){
-          //************Consulta API para actualizar tarea************
-          const updatedTask ={
-            ...task,
-            completed: !task.completed,
-            dateFinished: Date.now()
-          };
-          this.taskService.updateTask(updatedTask);
-          return updatedTask;
-        }
-        return task;
-      })
-    })
+  updateTask(index:number){
+    // Obtener la tarea a actualizar
+    const taskToUpdate = this.tasks()[index];
+
+    // Llamar a la API para actualizar la tarea
+    this.taskService.updateTask(taskToUpdate).then((taskUpdate) => {
+      // Si la API confirma la actualización, entonces actualizar el estado local
+      this.tasks.update(tasks =>
+        tasks.map((task, position) =>
+          position === index ? taskUpdate : task
+        )
+      );
+    }).catch(error => {
+      // Manejar el error, por ejemplo, informando al usuario
+      console.error('Error al actualizar la tarea', error);
+    });
   }
 
   deleteTask(index: number) {
-    this.tasks.update(tasks => {
-      // Solo permitir eliminar si el usuario actual creó la tarea y si no está completada
-      if (tasks[index].usersTaskCreatedId === this.currentUser().id && !tasks[index].completed) {
-        this.taskService.deleteTask(tasks[index].id).subscribe(() => {
-          // Actualiza el estado local solo después de una eliminación exitosa
-          this.tasks.update(tasks => tasks.filter((_, position) => position !== index));
-        }, error => {
-          // Manejo de errores, por ejemplo, mostrar un mensaje al usuario
-          console.error('Error al eliminar la tarea', error);
-        });
-        return tasks.filter((_, position) => position !== index);
-      }
-      alert("No puedes eliminar esta tarea")
-      return tasks; // Si no se cumplen las condiciones, no hacer cambios
+
+    const task = this.tasks()[index];
+
+    // Comprueba si el usuario puede eliminar la tarea
+    if (task.usersTaskCreatedId !== this.currentUser().id || task.completed) {
+      alert("No puedes eliminar esta tarea"); // Considerar una alternativa a alert
+      return;
+    }
+    this.taskService.deleteTask(task.id).then(() => {
+      // Actualiza el estado local solo después de una eliminación exitosa
+      this.tasks.update(tasks => tasks.filter((_, position) => position !== index));
+    }).catch(error => {
+      // Manejo de errores más detallado
+      console.error('Error al eliminar la tarea', error);
+      // Mostrar un mensaje de error al usuario
     });
   }
 }
