@@ -13,7 +13,10 @@ type Users @model {
 type Tasks @model {
   id: ID!
   title: String!
-  created: Users @belongsTo
-  assigned: Users @belongsTo
+  created: Users! @belongsTo
+  assigned: Users! @belongsTo
+  dateCreated: Int! @index
+  dateFinished: Int!
+  completed: Boolean!
 }
 
