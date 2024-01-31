@@ -22,7 +22,7 @@
       </div>
       <!-- Selector de usuario -->
       <select (change)="assignedUserEvent($event)" [value]="currentUser.name" class="p-2 border border-gray-300 rounded cursor-pointer">
-        <option *ngFor="let user of Users()" [value]="user.id">{{ user.name }}</option>
+        <option *ngFor="let user of Users(); index as i" [value]="user.id">{{ user.name }}</option>
       </select>
       <!-- List items -->
       <ul class="divide-y divide-gray-200">
