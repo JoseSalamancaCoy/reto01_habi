@@ -65,7 +65,7 @@ export class TaskService {
     //Consulta para eliminar tarea de base de datos
     
     // Preparar la tarea actualizada
-    const updatedTask = {
+    const taskUpdate = {
       ...task,
       completed: !task.completed,
       dateFinished: Math.floor(Date.now() / 1000)
@@ -74,10 +74,10 @@ export class TaskService {
       const response = await this.client.graphql({
         query: mutations.updateTasks,
         variables: {
-          input: {id:task.id, completed:task.completed, dateFinished:task.dateFinished }
+          input: {id:task.id, completed:taskUpdate.completed, dateFinished:taskUpdate.dateFinished }
         }
       });
-      return updatedTask;
+      return taskUpdate;
     } catch(e){
       console.error(e);
       throw e;
