@@ -1,11 +1,13 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import {Task} from './../../models/task.models'
-import {User} from './../../models/user-models'
+import {Tasks, Users} from './../../API.service'
 
 import {UserService} from './../../services/user.service'
 import {TaskService} from './../../services/task.service'
+
+import { generateClient, type Client } from 'aws-amplify/api';
+import { ListUsersQuery,ListTasksQuery,CreateUsersMutation } from '../../API.service'; 
 
 @Component({
   selector: 'app-home',
@@ -17,21 +19,46 @@ import {TaskService} from './../../services/task.service'
 
 export class HomeComponent {
   //--Define variables del componente --
-  tasks = signal<Task[]>([]);
-  Users = signal<User[]>([]);
-  currentUser!: User;   //Esto debe provenir del proceso de autenticacion
-  assignedUser!: User;  //Inicialmente sera el usuario autenticado
+  tasks = signal<Tasks[]>([]);
+  Users = signal<Users[]>([]);
+  defaultUser:Users ={
+    __typename : "Users",
+    id : "",
+    name: "",
+    email: ""
+  }
+  currentUser = signal<Users>(this.defaultUser);   //Esto debe provenir del proceso de autenticacion
+  assignedUser = signal<Users>(this.defaultUser);  
   //-------------------------------------
   private userService = inject(UserService);
   private taskService = inject(TaskService);
+  private changeDetectorRef= inject(ChangeDetectorRef);
   ngOnInit() {
     //  ************Consulta API para traer todas las tareas asignadas a un usuario a partir del id de usuario  ******************
     // Consulta para traer los valores del usuario actual
     // Consulta para traer la lista de todos los usuarios
-    this.currentUser = this.userService.getCurrentUser();
-    this.assignedUser= this.currentUser; //El usuario asignado por defecto es el mismo
-    this.Users.set(this.userService.getListUsers());
-    this.tasks.set(this.taskService.getTasksbyUser(this.currentUser.id));
+    const idUser  :string = "a3c07a02-eee2-4909-af17-acd50570f3da";
+    this.userService.getCurrentUser(idUser).then(user =>{
+      this.currentUser.set(user);
+      this.assignedUser.set(user); //El usuario asignado por defecto es el mismo
+      this.changeDetectorRef.detectChanges();
+    }).catch(error =>{
+      console.error('Error al obtener usuarios', error);
+    })
+    
+    this.userService.getListUsers().then(users =>{
+      this.Users.set(users);
+    }).catch(error =>{
+      console.error('Error al obtener usuarios', error);
+    })
+
+    this.taskService.getTasksbyUser(idUser).then(tasks =>{
+      this.tasks.set(tasks);
+    }).catch(error =>{
+      console.error('Error al obtener usuarios', error);
+    })
+
+
   }
   
   assignedUserEvent(event:Event){
@@ -39,8 +66,7 @@ export class HomeComponent {
   
     const user = this.Users().find(user => user.id === selectedId);
     if (user) {
-      this.assignedUser = user;
-      alert(`Usuario asignado: ${this.assignedUser.name}`);
+      this.assignedUser.set(user);
     } else {
       alert("Usuario no encontrado");
     }
@@ -49,8 +75,13 @@ export class HomeComponent {
   newTaskEvent(event: Event){
     const input = event.target as HTMLInputElement;
     const titleNewTask = input.value;
-    const newTask:Task = this.taskService.createTask(titleNewTask,this.assignedUser.id, this.currentUser.id);
-    this.tasks.update((tasks) => [...tasks, newTask]);
+    this.taskService.createTask(titleNewTask,this.assignedUser().id, this.currentUser().id).then(newTask =>{
+      if(newTask.usersTaskAssignedId === this.currentUser().id){
+        this.tasks.update((tasks) => [...tasks, newTask]);
+      }
+    }).catch(error =>{
+      console.error('Error al obtener usuarios', error);
+    })    
   }
 
   updateTask(index:Number){
@@ -74,7 +105,7 @@ export class HomeComponent {
   deleteTask(index: number) {
     this.tasks.update(tasks => {
       // Solo permitir eliminar si el usuario actual creó la tarea y si no está completada
-      if (tasks[index].userCreated === this.currentUser.id && !tasks[index].completed) {
+      if (tasks[index].usersTaskCreatedId === this.currentUser().id && !tasks[index].completed) {
         this.taskService.deleteTask(tasks[index].id).subscribe(() => {
           // Actualiza el estado local solo después de una eliminación exitosa
           this.tasks.update(tasks => tasks.filter((_, position) => position !== index));

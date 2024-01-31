@@ -21,7 +21,7 @@
         <input type="text" (keydown.enter)="newTaskEvent($event)" class="w-full p-2 border border-gray-300 rounded" placeholder="Añadir Tarea"/>
       </div>
       <!-- Selector de usuario -->
-      <select (change)="assignedUserEvent($event)" [value]="currentUser.name" class="p-2 border border-gray-300 rounded cursor-pointer">
+      <select (change)="assignedUserEvent($event)" [value]="currentUser().id" class="p-2 border border-gray-300 rounded cursor-pointer">
         <option *ngFor="let user of Users(); index as i" [value]="user.id">{{ user.name }}</option>
       </select>
       <!-- List items -->

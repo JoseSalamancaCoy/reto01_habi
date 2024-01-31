@@ -1,43 +1,55 @@
 import { Injectable } from '@angular/core';
-
-import {User} from './../models/user-models'
-
+import { type Client, generateClient } from 'aws-amplify/api';
+import * as query from './../../graphql/queries';
+import { Users } from '../API.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
+  public client: Client;
 
-  constructor() { }
+  constructor() {
+    const client = generateClient();
+    this.client = generateClient();
 
-  getCurrentUser(): User{
-    const currentUser:User={
-      id:"d687bc8b-cc7a-4a4d-8a49-73bd862e571f",
-      name:"Jose",
-      email:"jose@gmail.com"
-    };
-    return currentUser;
+   }
+  
+   public async getCurrentUser(id:string): Promise<Users>{
+    try {
+      const response = await this.client.graphql({
+        query: query.getUsers,
+        variables: { id } // Pasando el ID como variable
+      });
+  
+      if (response.data && response.data.getUsers) {
+        console.log('Usuario obtenido:', response.data.getUsers);
+        const users : Users ={
+          __typename : response.data.getUsers.__typename,
+          id: response.data.getUsers.id,
+          name: response.data.getUsers.name,
+          email: response.data.getUsers.email,
+        }
+        return users;
+      } else {
+        throw new Error('Usuario no encontrado');
+      }
+    } catch(e){
+      throw e;
+    }
   }
 
-  getListUsers(): User[]{
-    // Consulta para traer la lista de todos los usuarios
-    const listUsers:User[] =[
-      {
-        "id": "d687bc8b-cc7a-4a4d-8a49-73bd862e571f",
-        "name": "Jose",
-        "email": "jose@gmail.com"
-      },
-      {
-        "id": "a3c07a02-eee2-4909-af17-acd50570f3da",
-        "name": "Jose1",
-        "email": "jose1@gmail.com"
-      },
-      {
-        "id": "fcb76b9a-95d2-406c-ae27-7addc8c60cf5",
-        "name": "Jose2",
-        "email": "jose2@gmail.com"
-      }
-    ];
-    return listUsers;
+  public async getListUsers(): Promise<Users[]>{
+    try {
+      const response = await this.client.graphql({
+        query: query.listUsers,
+      });
+      console.log('Lista de usaurios!', response.data.listUsers.items);
+     
+      return response.data.listUsers.items;
+    } catch (e) {
+      console.log('error creating todo...', e);
+      return [];
+    }
   }
 }

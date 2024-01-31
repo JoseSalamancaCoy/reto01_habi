@@ -1,72 +1,68 @@
 import { Injectable } from '@angular/core';
 
-import {Task} from './../models/task.models'
+//import {Task} from './../models/task.models'
 import { Observable,of } from 'rxjs'; 
-
-
+import { type Client, generateClient } from 'aws-amplify/api';
+import * as mutations from './../../graphql/mutations';
+import * as query from './../../graphql/queries';
+import {Tasks} from './../API.service'
 @Injectable({
   providedIn: 'root'
 })
 export class TaskService {
+  public client: Client;
 
-    constructor() { }
+  constructor() {
+    const client = generateClient();
+    this.client = generateClient(); 
+  }
 
-    getTasksbyUser(userId:String) : Task[]{
-      // Consulta para traer la lista de todos los usuarios
-      const listTasks:Task[] =[
-        {
-          "id": "60dafa2a-3b06-250f-ca97-3386f41caa40",
-          "title": "Task 1",
-          "userCreated": "d687bc8b-cc7a-4a4d-8a49-73bd862e571f",
-          "userAssigned": "d687bc8b-cc7a-4a4d-8a49-73bd862e571f",
-          "dateCreated": 1706678908219,
-          "dateFinished": 0,
-          "completed": false
-        },
-        {
-          "id": "6e32411f-970d-f198-6374-b3742c570eae",
-          "title": "Task 2",
-          "userCreated": "d687bc8b-cc7a-4a4d-8a49-73bd862e571f",
-          "userAssigned": "d687bc8b-cc7a-4a4d-8a49-73bd862e571f",
-          "dateCreated": 1706678908219,
-          "dateFinished": 0,
-          "completed": false
-        },
-        {
-          "id": "fb555db2-65bc-8c0f-cb5f-4a0f19993d03",
-          "title": "Task 3",
-          "userCreated": "d687bc8b-cc7a-4a4d-8a49-73bd862e571f",
-          "userAssigned": "d687bc8b-cc7a-4a4d-8a49-73bd862e571f",
-          "dateCreated": 1706678908219,
-          "dateFinished": 1706679908219,
-          "completed": true
-        },
-        {
-          "id": "fb555db2-65bc-8c0f-cb5f-4a0f19993d03",
-          "title": "Task 4",
-          "userCreated": "a3c07a02-eee2-4909-af17-acd50570f3da",
-          "userAssigned": "d687bc8b-cc7a-4a4d-8a49-73bd862e571f",
-          "dateCreated": 1706678908219,
-          "dateFinished": 1706679908219,
-          "completed": false
-        }
-      ];
-      return listTasks;
+  public async getTasksbyUser(userId:string) : Promise<Tasks[]>{
+    // Consulta para traer la lista de todos los usuarios
+    try {
+      const response = await this.client.graphql({
+        query: query.listTasks,
+        variables: { filter: {usersTaskCreatedId: {contains: userId} }} // Pasando el userId como variable
+      });
+      if (response.data && response.data.listTasks && response.data.listTasks.items) {
+        console.log('Tareas obtenidas:', response.data.listTasks.items);
+        return response.data.listTasks.items;
+      } else {
+        throw new Error('No se pudieron obtener las tareas');
+      }
+    } catch (error) {
+      console.error('Error al obtener las tareas:', error);
+      throw error; // O maneja el error de acuerdo a tus necesidades
     }
   
-  createTask(title:String, userAssigned:String, currentUserId:String): Task {
+  }
+  
+  public async createTask(title:string, userAssignedId:string, currentUserId:string): Promise<Tasks> {
+    try{
+      console.log("Creando tarea")
       const newTask = {
-        id : this.generateUUID(),
         title,
-        userCreated: currentUserId,
-        userAssigned,
-        dateCreated: Date.now(),
-        dateFinished: 0,
+        usersTaskCreatedId: currentUserId,
+        usersTaskAssignedId: userAssignedId,
+        dateCreated: Math.floor(Date.now() / 1000), //Almacena el numero de segundos UNIX Time
+        dateFinished: 0, //Valor por defecto para indicar que no ha sido terminada
         completed: false
       }
-      return newTask;
-    }
-  updateTask(task:Task){
+      const response = await this.client.graphql({
+        query: mutations.createTasks,
+        variables: {
+          input: newTask
+        }
+      });
+
+      console.log('Tarea Creada', response.data.createTasks);
+      return response.data.createTasks
+    } catch(e){
+      console.error('Error al crear la tarea', e);
+      throw e; // O maneja el error como sea más apropiado para tu aplicación
+    } 
+  }
+  updateTask(task:Tasks){
     
     //Conuslta para actualizar valor de la tarea
   }
