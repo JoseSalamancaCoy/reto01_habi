@@ -1,0 +1,49 @@
+<div class="flex flex-col h-screen bg-gray-100">
+  <!-- Título en la parte superior -->
+  <div class="text-center py-4">
+    <h2 class="text-4xl font-bold text-[#5A67D8]">HABITASK</h2>
+  </div>
+
+  <!-- Contenedor del listado de tareas, crecerá hacia abajo -->
+  <div class="flex flex-col items-center overflow-auto">
+    <div class="bg-white p-6 rounded shadow-md w-full max-w-2xl">
+      <div class="flex justify-between items-center mb-4">
+        <h1 class="text-lg font-bold">Listado de tareas</h1>
+        <button>
+          <!-- Icono de búsqueda o puedes reemplazarlo con una imagen o svg -->
+          <svg class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 6h13M8 12h13m-7 6h7"/>
+          </svg>
+        </button>
+      </div>
+      <!-- Input para añadir nuevos elementos -->
+      <div class="mt-4">
+        <input type="text" (keydown.enter)="newTaskEvent($event)" class="w-full p-2 border border-gray-300 rounded" placeholder="Añadir Tarea"/>
+      </div>
+      <!-- Selector de usuario -->
+      <select (change)="assignedUserEvent($event)" [value]="currentUser.name" class="p-2 border border-gray-300 rounded cursor-pointer">
+        <option *ngFor="let user of Users()" [value]="user.id">{{ user.name }}</option>
+      </select>
+      <!-- List items -->
+      <ul class="divide-y divide-gray-200">
+        <!-- Repite este bloque para cada elemento de la lista -->
+        <li *ngFor="let task of tasks(); index as i" class="flex justify-between items-center py-2" >
+
+            <div class="flex items-center">
+              <input type="checkbox" class="mr-2" [checked]="task.completed" (change)="updateTask(i)"/>
+              <span>{{task.title}}</span>
+            </div>
+            
+            <button (click)="deleteTask(i)" 
+            class="ml-4 text-brown-500 hover:text-red-600 ">
+              <!-- Icono de eliminar o puedes reemplazarlo con una imagen o svg -->
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+        </li>
+        <!-- ... otros elementos de la lista -->
+      </ul>
+    </div>
+  </div>
+</div>
