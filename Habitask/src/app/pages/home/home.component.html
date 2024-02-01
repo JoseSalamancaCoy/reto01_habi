@@ -27,20 +27,36 @@
       <!-- List items -->
       <ul class="divide-y divide-gray-200">
         <!-- Repite este bloque para cada elemento de la lista -->
-        <li *ngFor="let task of tasks(); index as i" class="flex justify-between items-center py-2" >
+        <li *ngFor="let task of tasks(); index as i" class="flex justify-between items-center py-2">
+          <div class="flex justify-between w-full">
+            <div>
+              <div class="flex items-center">
+                <input type="checkbox" class="mr-2" [checked]="task.completed" (change)="updateTask(i)"/>
+                <span>{{task.title}}</span>
+              </div>
 
-            <div class="flex items-center">
-              <input type="checkbox" class="mr-2" [checked]="task.completed" (change)="updateTask(i)"/>
-              <span>{{task.title}}</span>
+              <div *ngIf="task.completed" class="text-gray-500 text-xs">
+                {{ task.dateCreated * 1000| date: 'dd MMMM HH:mm ' }} - 
+                {{ task.dateFinished * 1000 | date: 'dd MMMM HH:mm' }}
+              </div>
+              <!-- Si la tarea no está completada, podrías querer mostrar solo la fecha de creación -->
+              <div *ngIf="!task.completed" class="text-gray-500 text-xs">
+                {{ task.dateCreated * 1000| date: 'dd MMMM HH:mm' }}
+              </div>
             </div>
-            
-            <button (mousedown)="deleteTask(i)" 
-            class="ml-4 text-brown-500 hover:text-red-600 ">
-              <!-- Icono de eliminar o puedes reemplazarlo con una imagen o svg -->
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-              </svg>
-            </button>
+        
+            <div class="flex items-center">
+              <div class="text-gray-500 text-xs">
+                {{ task.assigned?.name }}
+              </div>
+              <button (mousedown)="deleteTask(i)" class="ml-4 text-brown-500 hover:text-red-600">
+                <!-- Icono de eliminar o puedes reemplazarlo con una imagen o svg -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+              </button>
+            </div>
+          </div>
         </li>
         <!-- ... otros elementos de la lista -->
       </ul>

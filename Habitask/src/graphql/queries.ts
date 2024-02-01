@@ -100,6 +100,31 @@ export const listTasks = /* GraphQL */ `query ListTasks(
   }
 }
 ` as GeneratedQuery<APITypes.ListTasksQueryVariables, APITypes.ListTasksQuery>;
+export const listTasksV2 = `
+query ListTaskV2(
+  $filter: ModelTasksFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listTasks(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      completed
+      assigned {
+        name
+      }
+      created {
+        name
+      }
+      id
+      title
+      dateCreated
+      dateFinished
+      usersTaskAssignedId
+      usersTaskCreatedId
+    }
+  }
+}
+`as GeneratedQuery<APITypes.ListTasksQueryVariables, APITypes.ListTasksQuery>;
 export const tasksByDateCreated = /* GraphQL */ `query TasksByDateCreated(
   $dateCreated: Int!
   $sortDirection: ModelSortDirection
