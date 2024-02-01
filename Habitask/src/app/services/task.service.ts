@@ -20,7 +20,7 @@ export class TaskService {
     // Consulta para traer la lista de todos los usuarios
     try {
       const response = await this.client.graphql({
-        query: query.listTasks,
+        query: query.listTasksV2,
         variables: { filter: {usersTaskAssignedId: {contains: userId} }} // Pasando el userId como variable
       });
       if (response.data && response.data.listTasks && response.data.listTasks.items) {
