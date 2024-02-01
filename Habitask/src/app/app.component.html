@@ -1,4 +1,4 @@
-<amplify-authenticator [signUpAttributes]= "['name','email']" >
+<amplify-authenticator [formFields]="formFields" [signUpAttributes]= "['name','email']" >
     <ng-template amplifySlot="header">
         <div style="padding: var(--amplify-space-large); text-align: center">
           <img
@@ -13,7 +13,7 @@
           class="amplify-heading"
           style="padding: var(--amplify-space-xl) 0 0 var(--amplify-space-xl)"
         >
-          Sign in to your account
+          Inicia con tu cuenta
         </h3>
     </ng-template>
     <ng-template amplifySlot="sign-up-header">
@@ -21,7 +21,7 @@
           class="amplify-heading"
           style="padding: var(--amplify-space-xl) 0 0 var(--amplify-space-xl)"
         >
-          Create a new account
+          Crea una nueva cuenta
         </h3>
       </ng-template>
     <ng-template
@@ -31,7 +31,7 @@
     >
    
 
-      <h2>Welcome, {{ user.username }}!</h2>
+      <h2>Bienvenido, {{ user.username }}!</h2>
       <button (click)="signOut()">Sign Out</button>
       <router-outlet></router-outlet> 
     </ng-template>

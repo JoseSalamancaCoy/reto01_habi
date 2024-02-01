@@ -45,6 +45,24 @@
       "service": "Cognito"
     }
   },
+  "function": {
+    "eventNewUser": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "habitask"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
   "hosting": {
     "amplifyhosting": {
       "providerPlugin": "awscloudformation",
@@ -53,6 +71,22 @@
     }
   },
   "parameters": {
+    "AMPLIFY_function_eventNewUser_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "eventNewUser"
+        }
+      ]
+    },
+    "AMPLIFY_function_eventNewUser_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "eventNewUser"
+        }
+      ]
+    },
     "AMPLIFY_hosting_amplifyhosting_appId": {
       "usedBy": [
         {

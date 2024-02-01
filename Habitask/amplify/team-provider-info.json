@@ -23,6 +23,12 @@
           "appId": "d2sxdocleslwtu",
           "type": "manual"
         }
+      },
+      "function": {
+        "eventNewUser": {
+          "deploymentBucketName": "amplify-habitask-dev-162448-deployment",
+          "s3Key": "amplify-builds/eventNewUser-7068616e414769364549-build.zip"
+        }
       }
     }
   }
