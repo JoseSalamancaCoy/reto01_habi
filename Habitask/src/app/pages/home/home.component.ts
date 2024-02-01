@@ -8,7 +8,7 @@ import {TaskService} from './../../services/task.service'
 
 import { generateClient, type Client } from 'aws-amplify/api';
 import { ListUsersQuery,ListTasksQuery,CreateUsersMutation } from '../../API.service'; 
-
+import { getCurrentUser } from 'aws-amplify/auth';
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -19,6 +19,7 @@ import { ListUsersQuery,ListTasksQuery,CreateUsersMutation } from '../../API.ser
 
 export class HomeComponent {
   //--Define variables del componente --
+  
   tasks = signal<Tasks[]>([]);
   Users = signal<Users[]>([]);
   defaultUser:Users ={
@@ -37,28 +38,28 @@ export class HomeComponent {
     //  ************Consulta API para traer todas las tareas asignadas a un usuario a partir del id de usuario  ******************
     // Consulta para traer los valores del usuario actual
     // Consulta para traer la lista de todos los usuarios
-    const idUser  :string = "a3c07a02-eee2-4909-af17-acd50570f3da";
-    this.userService.getCurrentUser(idUser).then(user =>{
-      this.currentUser.set(user);
-      this.assignedUser.set(user); //El usuario asignado por defecto es el mismo
-      this.changeDetectorRef.detectChanges();
-    }).catch(error =>{
-      console.error('Error al obtener usuarios', error);
-    })
-    
-    this.userService.getListUsers().then(users =>{
-      this.Users.set(users);
-    }).catch(error =>{
-      console.error('Error al obtener usuarios', error);
-    })
+    getCurrentUser().then((userLog) => {
+      const idUser  :string = userLog.userId;
+      this.userService.getCurrentUser(idUser).then(user =>{
+        this.currentUser.set(user);
+        this.assignedUser.set(user); //El usuario asignado por defecto es el mismo
+        this.changeDetectorRef.detectChanges();
+      }).catch(error =>{
+        console.error('Error al obtener usuarios', error);
+      })
+      
+      this.userService.getListUsers().then(users =>{
+        this.Users.set(users);
+      }).catch(error =>{
+        console.error('Error al obtener usuarios', error);
+      })
 
-    this.taskService.getTasksbyUser(idUser).then(tasks =>{
-      this.tasks.set(tasks);
-    }).catch(error =>{
-      console.error('Error al obtener usuarios', error);
-    })
-
-
+      this.taskService.getTasksbyUser(idUser).then(tasks =>{
+        this.tasks.set(tasks);
+      }).catch(error =>{
+        console.error('Error al obtener usuarios', error);
+      })
+    });
   }
   
   assignedUserEvent(event:Event){
